@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Définitions utiles pour un évaluation sécuritaire du code.
 
