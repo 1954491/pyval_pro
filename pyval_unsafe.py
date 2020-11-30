@@ -33,5 +33,4 @@ def main() -> None:
         exexit(ex)
 
 
-if __name__ == '__main__':
-    main()
+
