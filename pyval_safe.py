@@ -2,26 +2,19 @@
 
 """
 Programme pour évaluer une expression python
-(version non sécurtaire et modulaire)
+(version sécurtaire et modulaire)
 
 2020, Xavier Gagnon
 """
-
-from math import * # noqa
 from typing import NoReturn
+
+from m_safe_eval import safe_eval as eval  # noqa
 import sys
+
 import colorama
 from colorama import Fore
+
 colorama.init()
-
-
-def exexit(ex: BaseException, exit_code: int = 1) -> NoReturn:
-    """Rappoert une erreur et termine le programme"""
-    print(Fore.YELLOW, "[XG] ",
-          Fore.RED, ex.__class__.__name__,
-          Fore.YELLOW, ": ", ex,
-          file=sys.stderr, sep='')
-    sys.exit(exit_code)
 
 
 def main() -> None:
@@ -31,6 +24,15 @@ def main() -> None:
         print(Fore.CYAN + "Selon Xavier Gagnon:", Fore.RESET, evaluation)
     except BaseException as ex:
         exexit(ex)
+
+
+def exexit(ex: BaseException, exit_code: int = 1) -> NoReturn:
+    """Rappoert une erreur et termine le programme"""
+    print(Fore.YELLOW, "[XG] ",
+          Fore.RED, ex.__class__.__name__,
+          Fore.YELLOW, ": ", ex,
+          file=sys.stderr, sep='')
+    sys.exit(exit_code)
 
 
 if __name__ == '__main__':
