@@ -27,7 +27,7 @@ def main() -> None:
 
 
 def exexit(ex: BaseException, exit_code: int = 1) -> NoReturn:
-    """Rappoert une erreur et termine le programme"""
+    """Rapporte une erreur et termine le programme"""
     print(Fore.YELLOW, "[XG] ",
           Fore.RED, ex.__class__.__name__,
           Fore.YELLOW, ": ", ex,
