@@ -13,7 +13,6 @@ from colorama import Fore
 colorama.init()
 
 DELAI_SEC = 2.0
-ARRAY_SIZE = 2048
 
 EVALUATION = None
 """Variable globale utilisée pour récupérer le résultat"""

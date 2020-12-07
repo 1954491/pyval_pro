@@ -3,25 +3,25 @@
 """
 Autheur Xavier Gagnon
 """
-from typing import Optional
 
 from m_safe_eval import safe_eval
 from pyval_safe import exexit
 import sys
 from queue import Empty
-from multiprocessing import Process, Queue
+import multiprocessing as mp
+from multiprocessing.managers import Namespace
 import colorama
 from colorama import Fore
 
 colorama.init()
 
-DELAI_SEC = 2.0
+DELAI_SEC = 22222.0
 
 EVALUATION = None
 """Variable globale utilisée pour récupérer le résultat"""
 
 
-def pyval(expr: str, queue: Queue) -> None:
+def pyval(expr: str, ns: Namespace) -> None:
     """
     Évalue une expression.
     Retour (sérialisé) via pipe
@@ -30,18 +30,22 @@ def pyval(expr: str, queue: Queue) -> None:
         evaluation = safe_eval(expr)
     except BaseException as ex:
         evaluation = ex
-    queue.put(evaluation)
+    ns.evaluation = evaluation
 
 
 def main() -> None:
     """Fonction principale"""
-    ps: Optional[Process] = None
     try:
         expr = ' '.join(sys.argv[1:]) or "None"
-        queue = Queue()
-        ps = Process(target=pyval, args=(expr, queue))
+        man = mp.Manager()
+        ns = man.Namespace()
+        ps = mp.Process(target=pyval, args=(expr, ns))
         ps.start()
-        evaluation = queue.get(block=True, timeout=DELAI_SEC)
+        ps.join(DELAI_SEC)
+        if ps.is_alive():
+            ps.terminate()
+            raise TimeoutError(f"Le délai de {DELAI_SEC} seconde est écoulé")
+        evaluation = ns.evaluation
         if isinstance(evaluation, BaseException):
             raise evaluation
         print(Fore.CYAN + "Selon Xavier Gagnon:" + Fore.RESET, evaluation)
@@ -52,8 +56,6 @@ def main() -> None:
         exexit(ex)
     except KeyboardInterrupt:
         pass
-    finally:
-        ps and ps.terminate()
 
 
 if __name__ == '__main__':
